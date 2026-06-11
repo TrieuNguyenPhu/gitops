@@ -35,7 +35,9 @@ spec:
     canary:
       steps:
       - setWeight: 25
-      - pause: {} # Wait indefinitely until manually promoted
+      - analysis:
+          templates:
+          - templateName: success-rate
       - setWeight: 50
       - pause:
           duration: 30s
