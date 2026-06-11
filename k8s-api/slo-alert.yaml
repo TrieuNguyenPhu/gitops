@@ -1,0 +1,29 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: api-slo
+  namespace: demo
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+  - name: api-slo
+    rules:
+    # ---- SLO Recording Rule ----
+    # Tính tỷ lệ thành công (non-5xx) trong 5 phút gần nhất
+    - record: api:success_rate:5m
+      expr: |
+        sum(rate(flask_http_request_total{status!~"5..",namespace="demo",service="api"}[5m]))
+        /
+        sum(rate(flask_http_request_total{namespace="demo",service="api"}[5m]))
+
+    # ---- Alert Rule ----
+    # Fire khi tỷ lệ thành công dưới 95% liên tục 1 phút
+    - alert: ApiHighErrorRate
+      expr: api:success_rate:5m < 0.95
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "API success rate dropped below 95% SLO"
+        description: "Current success rate is {{ $value | humanizePercentage }}. SLO target: 95%."

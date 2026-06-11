@@ -14,6 +14,11 @@ spec:
         prometheus:
           prometheusSpec:
             serviceMonitorSelectorNilUsesHelmValues: false
+            ruleSelectorMatchLabels: {}
+            ruleSelector: {}
+        alertmanager:
+          alertmanagerSpec:
+            configSecret: alertmanager-config
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
@@ -24,3 +29,4 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
+
