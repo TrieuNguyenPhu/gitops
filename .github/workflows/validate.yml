@@ -9,6 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          curl -sSLO kc.tgz https://github.com/yannh/kubeconform/releases/download/v0.6.7/kubeconform-linux-amd64.tar.gz
+          curl -sSL -o kc.tgz https://github.com/yannh/kubeconform/releases/download/v0.6.7/kubeconform-linux-amd64.tar.gz
           tar -xzf kc.tgz && sudo mv kubeconform /usr/local/bin/
       - run: kubeconform -strict -summary k8s/  # validate, KHÔNG apply
